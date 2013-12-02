@@ -33,13 +33,9 @@ function admin_bpi_preview_ajax_callback($type = 'ajax', $bpi_id) {
   if (empty($bpi_ctype)) {
     return;
   }
-  $endpoint = variable_get('bpi_service_url', '');
-  $agency_id = variable_get('bpi_agency_id', '');
-  $api_key = variable_get('bpi_api_key', '');
-  $secret_key = variable_get('bpi_secret_key', '');
 
   try {
-    $bpi = new Bpi($endpoint, $agency_id, $api_key, $secret_key);
+    $bpi = bpi_client_instance();
     $bpi_node = $bpi->getNode($bpi_id);
     $bpi_content = $bpi_node->getProperties();
   }
