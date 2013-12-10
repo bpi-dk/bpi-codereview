@@ -144,6 +144,7 @@ function bpi_search_content($query = '', $page = 1, $filters = array(), $sort = 
   }
   catch (Exception $e) {
     watchdog_exception('bpi', $e);
+    drupal_set_message(t('Failed to fetch data. Check reports for more information.'), 'error');
   }
 
   return array();
