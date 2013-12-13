@@ -20,13 +20,9 @@
  *   Either an ajax-popup or an HTML representation of the item's
  *   preview.
  */
-function admin_bpi_preview_ajax_callback($type = 'ajax', $bpi_id) {
-  drupal_add_js(drupal_get_path('module', 'ding_popup') . '/ding_popup.js');
-  // TODO Is this needed? bpi.syndicate.inc is already in bpi.info.
-  module_load_include('inc', 'bpi', 'bpi.syndicate');
-
-  if (!isset($bpi_id)) {
-    return;
+function admin_bpi_preview_ajax_callback($type, $bpi_id) {
+  if (empty($bpi_id)) {
+    return _admin_bpi_preview_output($type, t('Incorrect BPI ID.'));
   }
   $bpi_ctype = variable_get('bpi_content_type', '');
   // This could lead to unexpected behavior. Just a note.
@@ -40,21 +36,10 @@ function admin_bpi_preview_ajax_callback($type = 'ajax', $bpi_id) {
     $bpi_content = $bpi_node->getProperties();
   }
   catch (Exception $e) {
-    watchdog_exception(
-      'bpi',
-      $e,
-      t('Error when syndicating node %title with message %message'),
-      array(
-        '%title' => $bpi_content['title'],
-        '%message' => $e->getMessage(),
-      ),
-      WATCHDOG_ERROR
-    );
-    drupal_set_message(t('Failed to fetch the article from BPI well.'), 'error');
+    watchdog_exception('bpi', $e);
+    return _admin_bpi_preview_output($type, t('Failed to fetch the article from BPI well.'));
   }
 
-  // TODO If an error occurs this means that the BPI content will be undefined.
-  // Is this intentional?
   $output = theme('bpi_preview_item', array('item' => $bpi_content));
   if ($type == 'ajax') {
     $commands = array();
