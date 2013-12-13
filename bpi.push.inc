@@ -515,7 +515,7 @@ function bpi_get_bpi_dictionaries() {
     $dictionaries = $bpi->getDictionaries();
   }
   catch (Exception $e) {
-    watchdog('bpi', $e);
+    watchdog_exception('bpi', $e);
   }
 
   return $dictionaries;
