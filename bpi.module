@@ -234,6 +234,9 @@ function bpi_form_alter(&$form, &$form_state, $form_id) {
 
   // Checking nid for NULL would say that this is create node form, not edit.
   if ($form_id == $bpi_ctype . '_node_form' && $form['nid']['#value'] == NULL && $bpi_id) {
+    // Furthermore this could be added as a form value for processing down the line instead of clinging to the
+    // GET/SESSION combo.
+
     try {
       $bpi = bpi_client_instance();
       $bpi_node = $bpi->getNode($bpi_id);
